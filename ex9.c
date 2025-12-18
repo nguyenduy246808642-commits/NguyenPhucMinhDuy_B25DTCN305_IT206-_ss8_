@@ -1,56 +1,49 @@
-
-
 #include <stdio.h>
-#include <string.h>
 
-#define MAX 100
+#define MAX_STUDENTS 100
+#define NAME_LEN 50
 
 typedef struct {
     int id;
-    char name[20];
+    char name[NAME_LEN];
     int age;
     float gpa;
 } Student;
 
-/**
- * @brief Thêm sinh viên m?i vào danh sách
+/*
+ * HÃ m thÃªm sinh viÃªn má»›i vÃ o danh sÃ¡ch
+ * students: máº£ng sinh viÃªn
+ * n: con trá» lÆ°u sá»‘ lÆ°á»£ng sinh viÃªn hiá»‡n táº¡i
+ * newStudent: sinh viÃªn cáº§n thÃªm
  *
- * Ki?m tra trùng ID trý?c khi thêm.
- * N?u ID ð? t?n t?i, không thêm sinh viên.
- *
- * @param students M?ng sinh viên
- * @param n        Con tr? s? lý?ng sinh viên
- * @param newStu   Sinh viên c?n thêm
- *
- * @return int
- *  - 1 n?u thêm thành công
- *  - 0 n?u ID b? trùng
+ * Tráº£ vá»:
+ *  1  - thÃªm thÃ nh cÃ´ng
+ *  0  - ID bá»‹ trÃ¹ng
+ * -1  - danh sÃ¡ch Ä‘Ã£ Ä‘áº§y
  */
-int addStudent(Student students[], int *n, Student newStu) {
+int addStudent(Student students[], int *n, Student newStudent) {
+    if (*n >= MAX_STUDENTS) return -1;
+
     for (int i = 0; i < *n; i++) {
-        if (students[i].id == newStu.id) {
-            return 0; // Trùng ID
+        if (students[i].id == newStudent.id) {
+            return 0;
         }
     }
 
-    students[*n] = newStu;
+    students[*n] = newStudent;
     (*n)++;
     return 1;
 }
 
-/**
- * @brief Xóa sinh viên theo ID
+/*
+ * HÃ m xÃ³a sinh viÃªn theo ID
+ * students: máº£ng sinh viÃªn
+ * n: con trá» lÆ°u sá»‘ lÆ°á»£ng sinh viÃªn hiá»‡n táº¡i
+ * id: ID cáº§n xÃ³a
  *
- * Duy?t m?ng ð? t?m ID c?n xóa.
- * N?u t?m th?y, d?n m?ng ð? lo?i b? sinh viên ðó.
- *
- * @param students M?ng sinh viên
- * @param n        Con tr? s? lý?ng sinh viên
- * @param id       ID sinh viên c?n xóa
- *
- * @return int
- *  - 1 n?u xóa thành công
- *  - 0 n?u không t?m th?y ID
+ * Tráº£ vá»:
+ *  1 - xÃ³a thÃ nh cÃ´ng
+ *  0 - khÃ´ng tÃ¬m tháº¥y ID
  */
 int deleteStudentById(Student students[], int *n, int id) {
     int foundIndex = -1;
@@ -62,9 +55,7 @@ int deleteStudentById(Student students[], int *n, int id) {
         }
     }
 
-    if (foundIndex == -1) {
-        return 0; // Không t?n t?i
-    }
+    if (foundIndex == -1) return 0;
 
     for (int i = foundIndex; i < *n - 1; i++) {
         students[i] = students[i + 1];
@@ -74,57 +65,7 @@ int deleteStudentById(Student students[], int *n, int id) {
     return 1;
 }
 
-/**
- * @brief Ghi danh sách sinh viên ra file
- */
-void saveToFile(Student students[], int n) {
-    FILE *f = fopen("students.txt", "w");
-    for (int i = 0; i < n; i++) {
-        fprintf(f, "%d %s %d %.1f\n",
-                students[i].id,
-                students[i].name,
-                students[i].age,
-                students[i].gpa);
-    }
-    fclose(f);
-}
-
-/**
- * @brief Ð?c d? li?u sinh viên t? file
- */
-int loadFromFile(Student students[]) {
-    FILE *f = fopen("students.txt", "r");
-    if (f == NULL) return 0;
-
-    int n = 0;
-    while (fscanf(f, "%d %s %d %f",
-                  &students[n].id,
-                  students[n].name,
-                  &students[n].age,
-                  &students[n].gpa) == 4) {
-        n++;
-    }
-
-    fclose(f);
-    return n;
-}
-
-int main() {
-    Student students[MAX];
-    int n = loadFromFile(students);
-
-    // ===== THÊM SINH VIÊN =====
-    Student newStu = {4, "Dung", 22, 6.5};
-    addStudent(students, &n, newStu);
-
-    // ===== XÓA SINH VIÊN =====
-    deleteStudentById(students, &n, 2);
-
-    // ===== C?P NH?T FILE =====
-    saveToFile(students, n);
-
-    // ===== IN K?T QU? =====
-    printf("Danh sach sau khi chinh sua:\n");
+void printStudents(Student students[], int n) {
     for (int i = 0; i < n; i++) {
         printf("%d %s %d %.1f\n",
                students[i].id,
@@ -132,8 +73,26 @@ int main() {
                students[i].age,
                students[i].gpa);
     }
+}
+
+int main() {
+    Student students[MAX_STUDENTS] = {
+        {1, "An", 20, 8.0},
+        {2, "Binh", 21, 7.5},
+        {3, "Chi", 19, 9.0}
+    };
+    int n = 3;
+
+    Student newStudent = {4, "Dung", 22, 6.5};
+    addStudent(students, &n, newStudent);
+
+    deleteStudentById(students, &n, 2);
+
+    printf("Danh sach sau khi chinh sua:\n");
+    printStudents(students, n);
 
     return 0;
 }
+
 
 
