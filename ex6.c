@@ -1,58 +1,50 @@
-
 #include <stdio.h>
+
+#define NAME_LEN 50
 
 typedef struct {
     int id;
+    char name[NAME_LEN];
+    int age;
     float gpa;
 } Student;
 
-/**
- * @brief Tính GPA trung b?nh c?a l?p
- *
- * @param students M?ng sinh viên
- * @param n        S? lý?ng sinh viên
- * @return float
- *  - GPA trung b?nh n?u n > 0
- *  - 0.0 n?u danh sách r?ng
- */
 float calculateAverageGPA(Student students[], int n) {
-    if (n <= 0) {
-        return 0.0;
-    }
+    if (n == 0) return 0.0f;
 
-    float sum = 0.0;
+    float sum = 0.0f;
     for (int i = 0; i < n; i++) {
         sum += students[i].gpa;
     }
-
     return sum / n;
 }
 
 int main() {
-    // ===== D? LI?U GI? L?P (AI GENERATED) =====
+    // ===== Test case: 10 sinh viÃªn giáº£ láº­p =====
     Student students[10] = {
-        {1, 7.5},
-        {2, 8.0},
-        {3, 8.5},
-        {4, 9.0},
-        {5, 7.0},
-        {6, 8.2},
-        {7, 8.8},
-        {8, 9.1},
-        {9, 7.9},
-        {10, 8.5}
+        {1, "A", 20, 8.0},
+        {2, "B", 21, 8.5},
+        {3, "C", 19, 7.5},
+        {4, "D", 22, 9.0},
+        {5, "E", 20, 8.0},
+        {6, "F", 21, 8.5},
+        {7, "G", 19, 7.0},
+        {8, "H", 22, 9.0},
+        {9, "I", 20, 8.0},
+        {10,"J", 21, 8.0}
     };
 
     int n = 10;
 
-    float avgGPA = calculateAverageGPA(students, n);
-    printf("GPA trung binh cua lop la: %.2f\n", avgGPA);
+    float avg = calculateAverageGPA(students, n);
+    printf("GPA trung binh cua lop la: %.2f\n", avg);
 
-    // ===== TEST CASE: DANH SÁCH R?NG =====
+    // ===== Test case: danh sÃ¡ch rá»—ng =====
     Student emptyList[1];
-    float emptyAvg = calculateAverageGPA(emptyList, 0);
-    printf("GPA trung binh (danh sach rong): %.2f\n", emptyAvg);
+    int emptyCount = 0;
+
+    float avgEmpty = calculateAverageGPA(emptyList, emptyCount);
+    printf("GPA trung binh khi danh sach rong la: %.2f\n", avgEmpty);
 
     return 0;
 }
-
