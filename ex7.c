@@ -1,27 +1,19 @@
-
 #include <stdio.h>
-#include <string.h>
+
+#define NAME_LEN 50
 
 typedef struct {
     int id;
-    char name[20];
+    char name[NAME_LEN];
     int age;
     float gpa;
 } Student;
 
-/**
- * @brief S?p x?p danh sách sinh viên theo GPA gi?m d?n
- *
- * @param students M?ng sinh viên
- * @param n        S? lý?ng sinh viên
- */
 void sortByGPA(Student students[], int n) {
-    Student temp;
-
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (students[j].gpa < students[j + 1].gpa) {
-                temp = students[j];
+                Student temp = students[j];
                 students[j] = students[j + 1];
                 students[j + 1] = temp;
             }
@@ -55,4 +47,8 @@ int main() {
 
     return 0;
 }
+
+
+
+
 
