@@ -1,58 +1,53 @@
 #include <stdio.h>
-#include <string.h>
 
-// �?nh ngh?a struct Student
+#define MAX_STUDENTS 5
+#define NAME_LEN 50
+
+// Khai báo struct Student
 typedef struct {
     int id;
-    char name[50];
+    char name[NAME_LEN];
     int age;
     float gpa;
 } Student;
 
-int main() {
-    // M?ng ch?a t?i �a 5 sinh vi�n
-    Student students[5];
-    int n;
-
-    // Nh?p s? sinh vi�n (1..5)
-    do {
-        printf("Nhap so sinh vien (1-5): ");
-        if (scanf("%d", &n) != 1) {
-            printf("Du lieu nhap khong hop le. Thoat.\n");
-            return 1;
-        }
-        if (n < 1 || n > 5) printf("Vui long nhap so tu 1 den 5.\n");
-    } while (n < 1 || n > 5);
-
-   
+// Hàm in danh sách sinh viên dạng bảng
+void printStudents(Student students[], int n) {
+    printf("\n%-5s %-10s %-5s %-5s\n", "ID", "Name", "Age", "GPA");
     for (int i = 0; i < n; i++) {
-        printf("---- Sinh vien %d ----\n", i + 1);
-        printf("Nhap ID: ");
-        scanf("%d", &students[i].id);
-        printf("Nhap Ten: ");
-        scanf(" %49[^]", students[i].name);
-        printf("Nhap Tuoi: ");
-        scanf("%d", &students[i].age);
-        printf("Nhap GPA: ");
-        scanf("%f", &students[i].gpa);
-    }
-
-    
-    printf("========================================\n");
-    printf("      DANH SACH SINH VIEN\n");
-    printf("========================================\n");
-    printf("%-5s %-30s %-5s %-10s\n", "ID", "Ten", "Tuoi", "GPA");
-    printf("-----------------------------------------------------------\n");
-
-    for (int i = 0; i < n; i++) {
-        printf("%-5d %-30s %-5d %-10.2f\n",
+        printf("%-5d %-10s %-5d %-5.1f\n",
                students[i].id,
                students[i].name,
                students[i].age,
                students[i].gpa);
     }
+}
 
-    printf("========================================\n");
+int main() {
+    Student students[MAX_STUDENTS];
+    int n;
+
+    // Nhập số lượng sinh viên (tối đa 5)
+    printf("Nhap so luong sinh vien (toi da 5): ");
+    scanf("%d", &n);
+
+    if (n < 1 || n > MAX_STUDENTS) {
+        printf("So luong sinh vien khong hop le.\n");
+        return 0;
+    }
+
+    // Nhập thông tin sinh viên
+    for (int i = 0; i < n; i++) {
+        printf("\nNhap sinh vien thu %d (id name age gpa):\n", i + 1);
+        scanf("%d %s %d %f",
+              &students[i].id,
+              students[i].name,
+              &students[i].age,
+              &students[i].gpa);
+    }
+
+    // In danh sách sinh viên
+    printStudents(students, n);
 
     return 0;
 }
