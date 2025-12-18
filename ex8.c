@@ -1,53 +1,56 @@
 
 #include <stdio.h>
-#include <string.h>
 
-#define MAX 100
+#define MAX_STUDENTS 100
+#define NAME_LEN 50
 
-// ===== STRUCT =====
+// Khai báo struct Student
 typedef struct {
     int id;
-    char name[20];
+    char name[NAME_LEN];
     int age;
     float gpa;
 } Student;
 
-// ===== FUNCTION DECLARATIONS =====
-void inputStudents(Student students[], int *n);
-void printStudents(Student students[], int n);
-void saveToFile(Student students[], int n);
-int loadFromFile(Student students[]);
-int findStudentById(Student students[], int n, int id);
-void sortByGPA(Student students[], int n);
-void addStudent(Student students[], int *n);
-void deleteStudent(Student students[], int *n);
-
-// ===== FUNCTIONS =====
-
-/**
- * @brief Nh?p danh s�ch sinh vi�n
+/*
+ * Hàm đọc danh sách sinh viên từ file
+ * filename: tên file lớp học (classA.txt, classB.txt, ...)
+ * students: mảng lưu sinh viên đọc được
+ * Trả về: số lượng sinh viên đọc được
  */
-void inputStudents(Student students[], int *n) {
-    printf("Nhap so sinh vien: ");
-    scanf("%d", n);
+int readStudentsFromFile(const char *filename, Student students[]) {
+    FILE *file;
+    int count = 0;
 
-    for (int i = 0; i < *n; i++) {
-        printf("Sinh vien %d\n", i + 1);
-        printf("ID: ");
-        scanf("%d", &students[i].id);
-        printf("Ten: ");
-        scanf("%s", students[i].name);
-        printf("Tuoi: ");
-        scanf("%d", &students[i].age);
-        printf("GPA: ");
-        scanf("%f", &students[i].gpa);
+    // Mở file ở chế độ đọc
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Khong mo duoc file %s\n", filename);
+        return 0;
     }
+
+    // Đọc lần lượt từng dòng trong file
+    while (fscanf(file, "%d %s %d %f",
+                  &students[count].id,
+                  students[count].name,
+                  &students[count].age,
+                  &students[count].gpa) == 4) {
+        count++;
+        if (count >= MAX_STUDENTS) {
+            break;
+        }
+    }
+
+    // Đóng file sau khi đọc xong
+    fclose(file);
+    return count;
 }
 
-/**
- * @brief In danh s�ch sinh vi�n
+/*
+ * Hàm in danh sách sinh viên ra màn hình
  */
-void printStudents(Student students[], int n) {
+void printStudents(Student students[], int n, const char *className) {
+    printf("Danh sach sinh vien lop %s:\n", className);
     for (int i = 0; i < n; i++) {
         printf("%d %s %d %.1f\n",
                students[i].id,
@@ -57,175 +60,25 @@ void printStudents(Student students[], int n) {
     }
 }
 
-/**
- * @brief Ghi danh s�ch sinh vi�n ra file
- */
-void saveToFile(Student students[], int n) {
-    FILE *f = fopen("students.txt", "w");
-    for (int i = 0; i < n; i++) {
-        fprintf(f, "%d %s %d %.1f\n",
-                students[i].id,
-                students[i].name,
-                students[i].age,
-                students[i].gpa);
-    }
-    fclose(f);
-}
-
-/**
- * @brief �?c danh s�ch sinh vi�n t? file
- */
-int loadFromFile(Student students[]) {
-    FILE *f = fopen("students.txt", "r");
-    if (f == NULL) return 0;
-
-    int n = 0;
-    while (fscanf(f, "%d %s %d %f",
-                  &students[n].id,
-                  students[n].name,
-                  &students[n].age,
-                  &students[n].gpa) == 4) {
-        n++;
-    }
-    fclose(f);
-    return n;
-}
-
-/**
- * @brief T?m sinh vi�n theo ID
- */
-int findStudentById(Student students[], int n, int id) {
-    for (int i = 0; i < n; i++)
-        if (students[i].id == id)
-            return i;
-    return -1;
-}
-
-/**
- * @brief S?p x?p sinh vi�n theo GPA gi?m d?n
- */
-void sortByGPA(Student students[], int n) {
-    Student temp;
-    for (int i = 0; i < n - 1; i++)
-        for (int j = 0; j < n - i - 1; j++)
-            if (students[j].gpa < students[j + 1].gpa) {
-                temp = students[j];
-                students[j] = students[j + 1];
-                students[j + 1] = temp;
-            }
-}
-
-/**
- * @brief Th�m sinh vi�n m?i
- */
-void addStudent(Student students[], int *n) {
-    Student s;
-    printf("Nhap ID: ");
-    scanf("%d", &s.id);
-
-    if (findStudentById(students, *n, s.id) != -1) {
-        printf("ID da ton tai!\n");
-        return;
-    }
-
-    printf("Ten: ");
-    scanf("%s", s.name);
-    printf("Tuoi: ");
-    scanf("%d", &s.age);
-    printf("GPA: ");
-    scanf("%f", &s.gpa);
-
-    students[*n] = s;
-    (*n)++;
-}
-
-/**
- * @brief Xoa sinh vien theo ID
- */
-void deleteStudent(Student students[], int *n) {
-    int id;
-    printf("Nhap ID can xoa: ");
-    scanf("%d", &id);
-
-    int index = findStudentById(students, *n, id);
-    if (index == -1) {
-        printf("Khong tim thay sinh vien!\n");
-        return;
-    }
-
-    for (int i = index; i < *n - 1; i++)
-        students[i] = students[i + 1];
-
-    (*n)--;
-}
-
-// ===== MAIN =====
 int main() {
-    Student students[MAX];
-    int n = 0;
-    int choice;
+    Student students[MAX_STUDENTS];
+    char filename[50];
+    int n;
 
-    do {
-        printf("\n===== Student Manager =====\n");
-        printf("1. Nhap sinh vien\n");
-        printf("2. In danh sach\n");
-        printf("3. Ghi file\n");
-        printf("4. Doc file\n");
-        printf("5. Tim kiem\n");
-        printf("6. Sap xep\n");
-        printf("7. Them sinh vien\n");
-        printf("8. Xoa sinh vien\n");
-        printf("0. Thoat\n");
-        printf("===========================\n");
-        printf("Chon chuc nang: ");
-        scanf("%d", &choice);
+    // Nhập tên file lớp học cần đọc
+    printf("Nhap ten file: ");
+    scanf("%s", filename);
 
-        switch (choice) {
-            case 1:
-                inputStudents(students, &n);
-                break;
-            case 2:
-                printStudents(students, n);
-                break;
-            case 3:
-                saveToFile(students, n);
-                break;
-            case 4:
-                n = loadFromFile(students);
-                break;
-            case 5: {
-                int id;
-                printf("Nhap ID can tim: ");
-                scanf("%d", &id);
-                int idx = findStudentById(students, n, id);
-                if (idx != -1)
-                    printf("%d %s %d %.1f\n",
-                           students[idx].id,
-                           students[idx].name,
-                           students[idx].age,
-                           students[idx].gpa);
-                else
-                    printf("Khong tim thay!\n");
-                break;
-            }
-            case 6:
-                sortByGPA(students, n);
-                break;
-            case 7:
-                addStudent(students, &n);
-                break;
-            case 8:
-                deleteStudent(students, &n);
-                break;
-            case 0:
-                printf("Thoat chuong trinh.\n");
-                break;
-            default:
-                printf("Lua chon khong hop le!\n");
-        }
+    // Đọc dữ liệu sinh viên từ file
+    n = readStudentsFromFile(filename, students);
 
-    } while (choice != 0);
+    // Nếu đọc được dữ liệu thì in ra màn hình
+    if (n > 0) {
+        printStudents(students, n, filename);
+    }
 
     return 0;
 }
+
+
 
