@@ -11,7 +11,7 @@ typedef struct {
     float gpa;
 } Student;
 
-/* In danh sách sinh viên */
+/* In danh sÃ¡ch sinh viÃªn */
 void printStudents(Student students[], int n) {
     printf("\nID   Name   Age   GPA\n");
     for (int i = 0; i < n; i++) {
@@ -23,7 +23,7 @@ void printStudents(Student students[], int n) {
     }
 }
 
-/* Nh?p sinh viên t? bàn phím */
+/* Nháº­p sinh viÃªn tá»« bÃ n phÃ­m */
 void inputStudents(Student students[], int *n) {
     int count;
     printf("Nhap so sinh vien can them: ");
@@ -40,7 +40,7 @@ void inputStudents(Student students[], int *n) {
     }
 }
 
-/* Ghi danh sách sinh viên ra file */
+/* Ghi danh sÃ¡ch sinh viÃªn ra file */
 void saveToFile(Student students[], int n) {
     FILE *f = fopen("students.txt", "w");
     for (int i = 0; i < n; i++) {
@@ -54,7 +54,7 @@ void saveToFile(Student students[], int n) {
     printf("Da ghi file students.txt\n");
 }
 
-/* Ğ?c danh sách sinh viên t? file */
+/* Äá»c danh sÃ¡ch sinh viÃªn tá»« file */
 int readFromFile(Student students[]) {
     FILE *f = fopen("students.txt", "r");
     int n = 0;
@@ -76,7 +76,7 @@ int readFromFile(Student students[]) {
     return n;
 }
 
-/* T?m ki?m sinh viên theo ID */
+/* TÃ¬m kiáº¿m sinh viÃªn theo ID */
 void searchStudent(Student students[], int n) {
     int id;
     printf("Nhap ID can tim: ");
@@ -95,7 +95,7 @@ void searchStudent(Student students[], int n) {
     printf("Khong tim thay\n");
 }
 
-/* S?p x?p sinh viên theo GPA gi?m d?n */
+/* Sáº¯p xáº¿p sinh viÃªn theo GPA giáº£m dáº§n */
 void sortByGPA(Student students[], int n) {
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
@@ -108,7 +108,7 @@ void sortByGPA(Student students[], int n) {
     }
 }
 
-/* Thêm sinh viên m?i */
+/* ThÃªm sinh viÃªn má»›i */
 void addStudent(Student students[], int *n) {
     Student s;
     printf("Nhap (id name age gpa): ");
@@ -125,7 +125,7 @@ void addStudent(Student students[], int *n) {
     (*n)++;
 }
 
-/* Xóa sinh viên theo ID */
+/* XÃ³a sinh viÃªn theo ID */
 void deleteStudent(Student students[], int *n) {
     int id;
     printf("Nhap ID can xoa: ");
